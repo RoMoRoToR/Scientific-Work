@@ -1,6 +1,6 @@
 FROM python:latest
 
 ADD server.py /server/
-ADD index.html /server/
+ADD Just_test/templates/index.html /server/
 
 WORKDIR /server/
