@@ -1,11 +1,38 @@
-version: "3"
+version: '3.7'
 
+volumes:
+    prometheus_data: {}
+    grafana_data: {}
+
+#python ./manage.py runserver 8080
 services:
   server:
-    build: ./server/
-    command: python ./manage.py runserver 8080
+    image: rt-server
+    build:
+        context: ./server
+        dockerfile: Dockerfile
     ports:
-      - "1234:1234"
+        - "80:8000"
+
+  prometheus:
+    image: prom/prometheus:latest
+    volumes:
+      - ./Config/Prometheus/:/etc/prometheus/
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'
+    ports:
+      - "9090:9090"
+#    links:
+#      - alertmanager:alertmanager
+#      - pushgateway:pushgateway
+#    networks:
+#      - back-tier
+    restart: always
+
   client:
     build: ./client/
     command: python ./client.py

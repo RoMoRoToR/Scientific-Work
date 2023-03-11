@@ -1,6 +1,18 @@
-FROM python:latest
+#FROM python:latest
+#
+#WORKDIR /server/
+#COPY ./requirements.txt /code/requirements.txt
+#RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
+#
+#COPY ./app /app
+#
+#CMD ["python", "app/manage.py", "runserver", "8080"]
 
-ADD server.py /server/
-ADD Just_test/templates/index.html /server/
+FROM python:3.10
+ENV PYTHONUNBUFFERED 1
+WORKDIR /app/
+ADD requirements.txt /app/
+RUN pip install --no-cache-dir --upgrade -r requirements.txt
+COPY . .
 
-WORKDIR /server/
+CMD ["python", "app/manage.py", "runserver"]
