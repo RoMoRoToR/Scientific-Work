@@ -7,14 +7,16 @@ volumes:
 #python ./manage.py runserver 8080
 services:
   server:
+    container_name: rt-server
     image: rt-server
     build:
         context: ./server
         dockerfile: Dockerfile
     ports:
-        - "80:8000"
+        - "8000:8000"
 
   prometheus:
+    container_name: prometheus
     image: prom/prometheus:latest
     volumes:
       - ./Config/Prometheus/:/etc/prometheus/
@@ -34,6 +36,7 @@ services:
     restart: always
 
   client:
+    container_name: rt-client
     build: ./client/
     command: python ./client.py
     network_mode: host
